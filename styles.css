@@ -1,0 +1,31 @@
+.nsx-import {
+	max-width: 760px;
+}
+
+.nsx-summary {
+	padding: 12px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 8px;
+	margin: 12px 0;
+}
+
+.nsx-counts {
+	font-weight: 600;
+	color: var(--text-accent);
+}
+
+.nsx-limits {
+	color: var(--text-muted);
+	font-size: var(--font-smallest);
+}
+
+.nsx-error {
+	color: var(--text-error);
+}
+
+.nsx-report {
+	white-space: pre-wrap;
+	max-height: 380px;
+	overflow: auto;
+	font-size: var(--font-small);
+}

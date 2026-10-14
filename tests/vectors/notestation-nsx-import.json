@@ -1,0 +1,630 @@
+{
+ "slug": "notestation-nsx-import",
+ "module": "notestation-nsx-import/src",
+ "function": "inspectRecords",
+ "cases": [
+  {
+   "name": "notestation-test-books.nsx has four notes two notebooks and three local assets",
+   "function": "fixture",
+   "args": [
+    "notestation-test-books.nsx"
+   ],
+   "expected": {
+    "notes": 4,
+    "notebooks": 2,
+    "assets": 3,
+    "missing": 0,
+    "linkedAssets": 3
+   }
+  },
+  {
+   "name": "20251026_153652_10216_abalakov.nsx has one note one notebook and one asset",
+   "function": "fixture",
+   "args": [
+    "20251026_153652_10216_abalakov.nsx"
+   ],
+   "expected": {
+    "notes": 1,
+    "notebooks": 1,
+    "assets": 1,
+    "missing": 0,
+    "linkedAssets": 0
+   }
+  },
+  {
+   "name": "seconds become millisecond file times",
+   "function": "importCase",
+   "args": [
+    {
+     "note": [
+      "n1"
+     ],
+     "notebook": [
+      "b1"
+     ]
+    },
+    {
+     "b1": {
+      "title": "Research"
+     },
+     "n1": {
+      "title": "Plan",
+      "parent_id": "b1",
+      "ctime": 1700000000,
+      "mtime": 1700000060
+     }
+    },
+    [],
+    "Import",
+    false,
+    false
+   ],
+   "expected": {
+    "notes": 1,
+    "assets": 0,
+    "times": [
+     {
+      "ctime": 1700000000000,
+      "mtime": 1700000060000
+     }
+    ],
+    "issues": [],
+    "creates": 3,
+    "networkCalls": 0
+   }
+  },
+  {
+   "name": "attachment reference maps by exported md5",
+   "function": "importCase",
+   "args": [
+    {
+     "note": [
+      "n1"
+     ],
+     "notebook": [
+      "b1"
+     ]
+    },
+    {
+     "b1": {
+      "title": "Research"
+     },
+     "n1": {
+      "title": "Plan",
+      "parent_id": "b1",
+      "content": "<img ref=\"image1\" src=\"placeholder\">",
+      "attachment": {
+       "x": {
+        "md5": "abc",
+        "ref": "image1",
+        "name": "chart.png"
+       }
+      }
+     }
+    },
+    [
+     "file_abc"
+    ],
+    "Import",
+    false,
+    false
+   ],
+   "expected": {
+    "notes": 1,
+    "assets": 1,
+    "times": [
+     {}
+    ],
+    "issues": [],
+    "creates": 4,
+    "networkCalls": 0
+   }
+  },
+  {
+   "name": "missing asset keeps its reference and creates no binary",
+   "function": "importCase",
+   "args": [
+    {
+     "note": [
+      "n1"
+     ],
+     "notebook": [
+      "b1"
+     ]
+    },
+    {
+     "b1": {
+      "title": "Research"
+     },
+     "n1": {
+      "title": "Plan",
+      "parent_id": "b1",
+      "content": "<img ref=\"image1\" src=\"placeholder\">",
+      "attachment": {
+       "x": {
+        "md5": "abc",
+        "ref": "image1",
+        "name": "chart.png"
+       }
+      }
+     }
+    },
+    [],
+    "Import",
+    false,
+    false
+   ],
+   "expected": {
+    "notes": 1,
+    "assets": 0,
+    "times": [
+     {}
+    ],
+    "issues": [
+     "n1: missing asset file_abc (image1).",
+     "n1: unresolved reference image1."
+    ],
+    "creates": 3,
+    "networkCalls": 0
+   }
+  },
+  {
+   "name": "unmatched note station ID remains unresolved",
+   "function": "importCase",
+   "args": [
+    {
+     "note": [
+      "n1"
+     ],
+     "notebook": [
+      "b1"
+     ]
+    },
+    {
+     "b1": {
+      "title": "Research"
+     },
+     "n1": {
+      "title": "Plan",
+      "parent_id": "b1",
+      "content": "<a href=\"notestation://remote/self/other\">Plan</a>"
+     }
+    },
+    [],
+    "Import",
+    false,
+    false
+   ],
+   "expected": {
+    "notes": 1,
+    "assets": 0,
+    "times": [
+     {}
+    ],
+    "issues": [
+     "n1: unresolved link notestation://remote/self/other."
+    ],
+    "creates": 3,
+    "networkCalls": 0
+   }
+  },
+  {
+   "name": "exact source ID link is resolved",
+   "function": "importCase",
+   "args": [
+    {
+     "note": [
+      "n1"
+     ],
+     "notebook": [
+      "b1"
+     ]
+    },
+    {
+     "b1": {
+      "title": "Research"
+     },
+     "n1": {
+      "title": "Plan",
+      "parent_id": "b1",
+      "content": "<a href=\"notestation://remote/self/n1\">Plan</a>"
+     }
+    },
+    [],
+    "Import",
+    false,
+    false
+   ],
+   "expected": {
+    "notes": 1,
+    "assets": 0,
+    "times": [
+     {}
+    ],
+    "issues": [],
+    "creates": 3,
+    "networkCalls": 0
+   }
+  },
+  {
+   "name": "Mobile mode uses Vault writes with network disabled",
+   "function": "importCase",
+   "args": [
+    {
+     "note": [
+      "n1"
+     ],
+     "notebook": [
+      "b1"
+     ]
+    },
+    {
+     "b1": {
+      "title": "Research"
+     },
+     "n1": {
+      "title": "Plan",
+      "parent_id": "b1",
+      "content": "<img ref=\"image1\" src=\"placeholder\">",
+      "attachment": {
+       "x": {
+        "md5": "abc",
+        "ref": "image1",
+        "name": "chart.png"
+       }
+      }
+     }
+    },
+    [
+     "file_abc"
+    ],
+    "Import",
+    false,
+    true
+   ],
+   "expected": {
+    "notes": 1,
+    "assets": 1,
+    "times": [
+     {}
+    ],
+    "issues": [],
+    "creates": 4,
+    "networkCalls": 0
+   }
+  },
+  {
+   "name": "existing output folder stops before writes",
+   "function": "importCase",
+   "args": [
+    {
+     "note": [
+      "n1"
+     ],
+     "notebook": [
+      "b1"
+     ]
+    },
+    {
+     "b1": {
+      "title": "Research"
+     },
+     "n1": {
+      "title": "Plan",
+      "parent_id": "b1"
+     }
+    },
+    [],
+    "Import",
+    true,
+    false
+   ],
+   "expected": {
+    "error": "The output folder exists. Select a new folder.",
+    "creates": 0
+   }
+  },
+  {
+   "name": "unlisted asset is kept and reported",
+   "function": "importCase",
+   "args": [
+    {
+     "note": [
+      "n1"
+     ],
+     "notebook": [
+      "b1"
+     ]
+    },
+    {
+     "b1": {
+      "title": "Research"
+     },
+     "n1": {
+      "title": "Plan",
+      "parent_id": "b1"
+     }
+    },
+    [
+     "file_abc"
+    ],
+    "Import",
+    false,
+    false
+   ],
+   "expected": {
+    "notes": 1,
+    "assets": 1,
+    "times": [
+     {}
+    ],
+    "issues": [
+     "Unlisted asset kept: file_abc"
+    ],
+    "creates": 4,
+    "networkCalls": 0
+   }
+  },
+  {
+   "name": "a table is marked for manual review",
+   "function": "importCase",
+   "args": [
+    {
+     "note": [
+      "n1"
+     ],
+     "notebook": [
+      "b1"
+     ]
+    },
+    {
+     "b1": {
+      "title": "Research"
+     },
+     "n1": {
+      "title": "Plan",
+      "parent_id": "b1",
+      "content": "<table><tr><td>Cell</td></tr></table>"
+     }
+    },
+    [],
+    "Import",
+    false,
+    false
+   ],
+   "expected": {
+    "notes": 1,
+    "assets": 0,
+    "times": [
+     {}
+    ],
+    "issues": [
+     "n1: table or chart needs manual review."
+    ],
+    "creates": 3,
+    "networkCalls": 0
+   }
+  },
+  {
+   "name": "unsafe archive member ../outside.txt",
+   "function": "zipError",
+   "args": [
+    "UEsDBBQAAAAIAMxyTl2DFtyMAwAAAAEAAAAOAAAALi4vb3V0c2lkZS50eHSrAABQSwECFAMUAAAACADMck5dgxbcjAMAAAABAAAADgAAAAAAAAAAAAAAgAEAAAAALi4vb3V0c2lkZS50eHRQSwUGAAAAAAEAAQA8AAAALwAAAAAA"
+   ],
+   "expected": {
+    "error": "The archive has an unsafe path."
+   }
+  },
+  {
+   "name": "unsafe archive member /outside.txt",
+   "function": "zipError",
+   "args": [
+    "UEsDBBQAAAAIAMxyTl2DFtyMAwAAAAEAAAAMAAAAL291dHNpZGUudHh0qwAAUEsBAhQDFAAAAAgAzHJOXYMW3IwDAAAAAQAAAAwAAAAAAAAAAAAAAIABAAAAAC9vdXRzaWRlLnR4dFBLBQYAAAAAAQABADoAAAAtAAAAAAA="
+   ],
+   "expected": {
+    "error": "The archive has an unsafe path."
+   }
+  },
+  {
+   "name": "unsafe archive member a\\b",
+   "function": "zipError",
+   "args": [
+    "UEsDBBQAAAAIAMxyTl2DFtyMAwAAAAEAAAADAAAAYVxiqwAAUEsBAhQDFAAAAAgAzHJOXYMW3IwDAAAAAQAAAAMAAAAAAAAAAAAAAIABAAAAAGFcYlBLBQYAAAAAAQABADEAAAAkAAAAAAA="
+   ],
+   "expected": {
+    "error": "The archive has an unsafe path."
+   }
+  },
+  {
+   "name": "oversized expanded member rejected before writes",
+   "function": "zipError",
+   "args": [
+    "UEsDBBQAAAAIAMxyTl1Dv6ajBAAAAAIAAAALAAAAY29uZmlnLmpzb26rrgUAUEsBAhQDFAAAAAgAzHJOXUO/pqMEAAAAAQBABgsAAAAAAAAAAAAAAIABAAAAAGNvbmZpZy5qc29uUEsFBgAAAAABAAEAOQAAAC0AAAAAAA=="
+   ],
+   "expected": {
+    "error": "The expanded archive exceeds 100 MiB."
+   }
+  },
+  {
+   "name": "safe name 'A/B: idea'",
+   "function": "safeName",
+   "args": [
+    "A/B: idea"
+   ],
+   "expected": "A-B- idea"
+  },
+  {
+   "name": "safe name '../Outside'",
+   "function": "safeName",
+   "args": [
+    "../Outside"
+   ],
+   "expected": "-Outside"
+  },
+  {
+   "name": "safe name ''",
+   "function": "safeName",
+   "args": [
+    ""
+   ],
+   "expected": "Untitled"
+  },
+  {
+   "name": "safe name 'Research'",
+   "function": "safeName",
+   "args": [
+    "Research"
+   ],
+   "expected": "Research"
+  },
+  {
+   "name": "reject output ../outside",
+   "function": "rootFolder",
+   "args": [
+    "../outside"
+   ],
+   "expected": {
+    "error": "Use one safe folder name without a path."
+   }
+  },
+  {
+   "name": "reject output a/b",
+   "function": "rootFolder",
+   "args": [
+    "a/b"
+   ],
+   "expected": {
+    "error": "Use one safe folder name without a path."
+   }
+  },
+  {
+   "name": "reject output ..",
+   "function": "rootFolder",
+   "args": [
+    ".."
+   ],
+   "expected": {
+    "error": "Use one safe folder name without a path."
+   }
+  },
+  {
+   "name": "duplicate source IDs rejected",
+   "function": "inspectRecords",
+   "args": [
+    {
+     "note": [
+      "same",
+      "same"
+     ],
+     "notebook": []
+    },
+    {}
+   ],
+   "expected": {
+    "error": "Duplicate source ID in config.json."
+   }
+  },
+  {
+   "name": "empty backup counts",
+   "function": "inspectRecords",
+   "args": [
+    {
+     "note": [],
+     "notebook": []
+    },
+    {}
+   ],
+   "expected": {
+    "notes": 0,
+    "notebooks": 0,
+    "ids": [],
+    "times": [],
+    "tags": []
+   }
+  },
+  {
+   "name": "original tags preserved",
+   "function": "inspectRecords",
+   "args": [
+    {
+     "note": [
+      "n1"
+     ],
+     "notebook": [
+      "b1"
+     ]
+    },
+    {
+     "b1": {
+      "title": "Research"
+     },
+     "n1": {
+      "tag": [
+       "two words",
+       "topic/sub",
+       5
+      ]
+     }
+    }
+   ],
+   "expected": {
+    "notes": 1,
+    "notebooks": 1,
+    "ids": [
+     "n1"
+    ],
+    "times": [
+     {}
+    ],
+    "tags": [
+     [
+      "two words",
+      "topic/sub"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "source ID comparison has four groups",
+   "function": "comparison",
+   "args": [
+    {
+     "n1": {
+      "title": "A"
+     },
+     "n2": {
+      "title": "B"
+     },
+     "n3": {
+      "title": "C"
+     }
+    },
+    {
+     "n1": {
+      "title": "A"
+     },
+     "n2": {
+      "title": "B changed"
+     },
+     "n4": {
+      "title": "D"
+     }
+    }
+   ],
+   "expected": {
+    "added": [
+     "n4"
+    ],
+    "changed": [
+     "n2"
+    ],
+    "removed": [
+     "n3"
+    ],
+    "unchanged": [
+     "n1"
+    ]
+   }
+  }
+ ]
+}

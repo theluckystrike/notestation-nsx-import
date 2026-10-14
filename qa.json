@@ -1,0 +1,61 @@
+[
+  {
+    "feature": "preview",
+    "caption": "Preview four source notes, two notebooks and three asset members.",
+    "note": "Welcome.md",
+    "eval": "(async()=>{window.__nsxModal?.close();document.querySelectorAll('.notice').forEach(e=>e.remove());app.plugins.plugins['notestation-nsx-import'].pro.signOut();const f=app.vault.getFileByPath('Note Station NSX Import/Field archive.nsx'); const m=app.plugins.plugins['notestation-nsx-import'].openImport(new Uint8Array(await app.vault.readBinary(f)));window.__nsxModal=m;return 'ok';})()",
+    "zoom": 0.85
+  },
+  {
+    "feature": "notebooks",
+    "caption": "An imported checklist with source dates, tags and notebook properties.",
+    "eval": "(async()=>{const old=app.vault.getAbstractFileByPath('NSX sample import');if(old)await app.vault.delete(old,true);const m=window.__nsxModal;m.folder='NSX sample import';await m.run();window.__nsxModal?.close();document.querySelectorAll('.notice').forEach(e=>e.remove());await app.workspace.openLinkText('NSX sample import/Research/Field checklist 1.md','',false);await new Promise(r=>setTimeout(r,300));document.querySelectorAll('.markdown-preview-view,.cm-scroller').forEach(e=>{if(e.offsetParent!==null)e.scrollTop=150;});return 'ok';})()"
+  },
+  {
+    "feature": "assets",
+    "caption": "The packing diagram uses a local attachment from the backup.",
+    "eval": "(async()=>{window.__nsxModal?.close();document.querySelectorAll('.notice').forEach(e=>e.remove());await app.workspace.openLinkText('NSX sample import/Research/Packing diagram 2.md','',false);await new Promise(r=>setTimeout(r,300));document.querySelectorAll('.markdown-preview-view,.cm-scroller').forEach(e=>{if(e.offsetParent!==null)e.scrollTop=450;});return 'ok';})()"
+  },
+  {
+    "feature": "report",
+    "caption": "The report lists a missing asset and an unresolved source link.",
+    "eval": "(async()=>{window.__nsxModal?.close();document.querySelectorAll('.notice').forEach(e=>e.remove());await app.workspace.openLinkText('NSX sample import/Import report.md','',false);return 'ok';})()"
+  },
+  {
+    "feature": "profiles",
+    "caption": "A saved notebook mapping profile with Pro enabled for the local demo.",
+    "eval": "(async()=>{window.__nsxModal?.close();document.querySelectorAll('.notice').forEach(e=>e.remove());const p=app.plugins.plugins['notestation-nsx-import'];p.pro.opts.http=async()=>({status:200,json:{data:{viewer:{login:'demo-reader'},user:{sponsorshipForViewerAsSponsor:{isActive:true,isOneTimePayment:false,tier:{name:'$5 a month',monthlyPriceInCents:500}}}}}});app.secretStorage.setSecret('notestation-nsx-import-github-token','gho_'+'0'.repeat(36));await p.pro.refreshNow();const f=app.vault.getFileByPath('Note Station NSX Import/Field archive.nsx'); const m=app.plugins.plugins['notestation-nsx-import'].openImport(new Uint8Array(await app.vault.readBinary(f)));window.__nsxModal=m;m.mapping={b1:'Field research',b2:'Visit journal'};await p.saveProfile('Field archive',m.archive,m.mapping);m.draw();m.contentEl.querySelector('select').value='Field archive';m.contentEl.scrollTop=m.contentEl.scrollHeight;return 'ok';})()",
+    "zoom": 0.85,
+    "after": "(async()=>{window.__nsxModal?.close();document.querySelectorAll('.notice').forEach(e=>e.remove());return 'ok';})()"
+  },
+  {
+    "feature": "comparison",
+    "caption": "A later backup has one added note, one changed note and one removed note.",
+    "eval": "(async()=>{window.__nsxModal?.close();document.querySelectorAll('.notice').forEach(e=>e.remove());const p=app.plugins.plugins['notestation-nsx-import'];p.pro.opts.http=async()=>({status:200,json:{data:{viewer:{login:'demo-reader'},user:{sponsorshipForViewerAsSponsor:{isActive:true,isOneTimePayment:false,tier:{name:'$5 a month',monthlyPriceInCents:500}}}}}});app.secretStorage.setSecret('notestation-nsx-import-github-token','gho_'+'0'.repeat(36));await p.pro.refreshNow();const f=app.vault.getFileByPath('Note Station NSX Import/Later archive.nsx');const m=app.plugins.plugins['notestation-nsx-import'].openImport(new Uint8Array(await app.vault.readBinary(f)));window.__nsxModal=m;const old=app.vault.getAbstractFileByPath('NSX sample review');if(old)await app.vault.delete(old,true);m.before=JSON.parse(await app.vault.read(app.vault.getFileByPath('NSX sample import/Source snapshot.json')));m.folder='NSX sample review';await m.run();window.__nsxModal?.close();document.querySelectorAll('.notice').forEach(e=>e.remove());await app.workspace.openLinkText('NSX sample review/Import report.md','',false);return 'ok';})()",
+    "after": "(async()=>{app.plugins.plugins['notestation-nsx-import'].pro.signOut();return 'ok';})()"
+  },
+  {
+    "feature": "import-flow",
+    "caption": "Preview the backup, then inspect the imported checklist, diagram and report.",
+    "frames": [
+      {
+        "note": "Welcome.md",
+        "eval": "(async()=>{window.__nsxModal?.close();document.querySelectorAll('.notice').forEach(e=>e.remove());const f=app.vault.getFileByPath('Note Station NSX Import/Field archive.nsx'); const m=app.plugins.plugins['notestation-nsx-import'].openImport(new Uint8Array(await app.vault.readBinary(f)));window.__nsxModal=m;return 'ok';})()",
+        "zoom": 0.85,
+        "hold": 1400
+      },
+      {
+        "eval": "(async()=>{window.__nsxModal?.close();document.querySelectorAll('.notice').forEach(e=>e.remove());await app.workspace.openLinkText('NSX sample import/Research/Field checklist 1.md','',false);await new Promise(r=>setTimeout(r,300));document.querySelectorAll('.markdown-preview-view,.cm-scroller').forEach(e=>{if(e.offsetParent!==null)e.scrollTop=150;});return 'ok';})()",
+        "hold": 1400
+      },
+      {
+        "eval": "(async()=>{window.__nsxModal?.close();document.querySelectorAll('.notice').forEach(e=>e.remove());await app.workspace.openLinkText('NSX sample import/Research/Packing diagram 2.md','',false);await new Promise(r=>setTimeout(r,300));document.querySelectorAll('.markdown-preview-view,.cm-scroller').forEach(e=>{if(e.offsetParent!==null)e.scrollTop=450;});return 'ok';})()",
+        "hold": 1400
+      },
+      {
+        "eval": "(async()=>{window.__nsxModal?.close();document.querySelectorAll('.notice').forEach(e=>e.remove());await app.workspace.openLinkText('NSX sample import/Import report.md','',false);return 'ok';})()",
+        "hold": 1400
+      }
+    ]
+  }
+]
