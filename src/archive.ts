@@ -41,7 +41,8 @@ export function members(bytes: Uint8Array): Member[] {
 		if (names.has(name.toLowerCase())) throw new Error('The archive has duplicate member names.');
 		names.add(name.toLowerCase());
 		const size = view.getUint32(cursor + 24, true);
-		if (size === 0xffffffff) throw new Error('ZIP64 archives are not supported.');
+		// Reject ZIP64 size and offset sentinels before unzipSync reads extra fields.
+		if (size === 0xffffffff || view.getUint32(cursor + 20, true) === 0xffffffff || view.getUint32(cursor + 42, true) === 0xffffffff) throw new Error('ZIP64 archives are not supported.');
 		total += size;
 		if (total > MAX_EXPANDED) throw new Error('The expanded archive exceeds 100 MiB.');
 		result.push({ name, size, crc: view.getUint32(cursor + 16, true) });

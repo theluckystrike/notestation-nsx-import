@@ -20,6 +20,32 @@ async function select(bytes: Uint8Array, folder: string) {
 async function run() { await browser.execute(()=>{const button=Array.from(document.querySelectorAll<HTMLButtonElement>('.nsx-import button')).find(b=>b.textContent==='Create new files');if(!button||button.disabled)throw Error('Import button is not ready');button.click();}); await browser.$('.nsx-report').waitForExist({timeout:15000}); }
 async function fileText(path: string) { return browser.executeObsidian(async({app},path)=>{const file=app.vault.getFileByPath(path);if(!file)throw Error('Missing '+path);return app.vault.read(file);},path); }
 describe('local NSX import',()=>{
+ for (const [kind, error] of [['zip64', 'ZIP64 archives are not supported'], ['path', 'unsafe path'], ['crc', 'checksum']] as const) {
+  it(`rejects an untrusted ${kind} archive before vault writes`, async () => {
+   const bytes = kind === 'path' ? zipSync({ '../outside.txt': strToU8('x') }) : sample();
+   if (kind !== 'path') {
+    const view = new DataView(bytes.buffer);
+    const directory = view.getUint32(bytes.length - 22 + 16, true);
+    view.setUint32(directory + (kind === 'zip64' ? 20 : 16), kind === 'zip64' ? 0xffffffff : 42, true);
+   }
+   const before = await browser.executeObsidian(({app}) => app.vault.getAllLoadedFiles().map(f => f.path).sort());
+   await closeModal();
+   await browser.executeObsidianCommand(`${pluginId}:import-nsx`);
+   await browser.$('.nsx-file').waitForExist();
+   await browser.execute((values: number[]) => {
+    const input = document.querySelector<HTMLInputElement>('.nsx-file')!;
+    const dt = new DataTransfer();
+    dt.items.add(new File([new Uint8Array(values)], 'untrusted.nsx'));
+    input.files = dt.files;
+    input.dispatchEvent(new Event('change', {bubbles: true}));
+   }, Array.from(bytes));
+   await browser.$('.nsx-error').waitForExist();
+   expect(await browser.$('.nsx-error').getText()).toContain(error);
+   expect(await browser.$('.nsx-counts').isExisting()).toBe(false);
+   expect(await browser.execute(() => Array.from(document.querySelectorAll('button')).some(b => b.textContent === 'Create new files'))).toBe(false);
+   expect(await browser.executeObsidian(({app}) => app.vault.getAllLoadedFiles().map(f => f.path).sort())).toEqual(before);
+  });
+ }
  it('shows counts and converts a checklist with source dates and a local asset',async()=>{
   await select(sample(),'E2E import');expect(await browser.$('.nsx-counts').getText()).toBe('1 notes · 1 notebooks · 1 asset members');await run();
   const value=await fileText('E2E import/Research/Field notes 1.md');
