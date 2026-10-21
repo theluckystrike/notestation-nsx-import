@@ -10,7 +10,7 @@ This plugin reads the file that you select through the system file picker. That 
 
 ### Preview a local backup
 
-Use the import command to select one NSX file. The plugin reads `config.json` and the listed note and notebook records. The preview shows note, notebook, and asset member counts, plus up to six note titles. You can close the modal before creating files. The preview makes no vault changes.
+Use the import command to select one NSX file. The plugin reads `config.json` and the listed note and notebook records. The preview shows note, notebook, and asset member counts, plus up to six note titles. You can close the modal before creating files.
 
 The limits are 20 MiB for the archive, 100 MiB for expanded data, and 5,000 ZIP members. Unsafe member paths and duplicate names stop the import. Encrypted, split, and ZIP64 archives are rejected. A missing record also stops the import before files are written.
 
@@ -46,7 +46,7 @@ If a write fails, partial files remain in the new folder. The error shows that f
 
 ### Notebook mapping profiles (Pro)
 
-Save the notebook folder choices as a named profile. A profile maps source notebook IDs to folder names and stays in the plugin data for this vault. Select a profile to apply it to a later archive that uses those IDs. You can still edit the folder choices before the import. Loading and saving a profile require Pro.
+Save the notebook folder choices as a named profile. A profile maps source notebook IDs to folder names and stays in the plugin data for this vault. Select a profile to apply it to a later archive that uses those IDs. You can still edit the folder choices before the import.
 
 <img src="https://raw.githubusercontent.com/theluckystrike/notestation-nsx-import/HEAD/docs/profiles.png" alt="Notebook mapping fields and a saved profile" width="720">
 
@@ -74,7 +74,9 @@ Keep `Source snapshot.json` if you want to compare a later backup. Snapshot sele
 
 ## Settings
 
-Default output folder supplies the initial folder name in the modal. Use one name without a slash or a parent path. The import modal can use a different name for a single run. GitHub sign-in and Pro status controls are in the plugin settings. Saved notebook profiles are managed in the import modal.
+After a minor or major update, this plugin opens one What's new tab in the background. The tab and settings card suggest other NoteMods plugins and Zovo Chat and link to notemods.com for feedback ([privacy](https://notemods.com/privacy/)). The tab sends no data. Turn the tab off in Settings.
+
+Default output folder supplies the initial folder name in the modal. Use one name without a slash or a parent path. The import modal can use a different name for a single run. Saved notebook profiles are managed in the import modal.
 
 ## FAQ
 

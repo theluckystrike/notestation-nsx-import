@@ -6,10 +6,14 @@ import { SPONSORS, bindPro, isPro, resetPro } from './pro';
 import { DEFAULT_SETTINGS, ImportSettingTab, normalizeSettings, type ImportSettings } from './settings';
 import { ImportModal } from './modal';
 import type { Archive } from './model';
+import { setupHello } from './hello/index';
+import WHATS_NEW from './whats-new.json';
 export default class NotestationNsxImportPlugin extends Plugin {
  settings: ImportSettings = { ...DEFAULT_SETTINGS, profiles:{} };
  pro: SponsorsManager | null = null;
  async onload(): Promise<void> {
+  // First: "What's new" reads its state before the settings load (packages/hello). It does not wait.
+  setupHello(this, WHATS_NEW);
   await this.loadSettings();
   const pro = createGitHubSponsors(this.app, this.manifest.id, SPONSORS, this); pro.init(); this.pro = pro; bindPro(pro);
   const tab = new ImportSettingTab(this.app, this); this.addSettingTab(tab); this.register(pro.onChange(() => tab.update()));

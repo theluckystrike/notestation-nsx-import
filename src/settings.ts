@@ -3,6 +3,7 @@ import { sponsorsSettingItems } from './license/github-obsidian';
 import { PRO_UI } from './pro';
 import { record, text, type Snapshot } from './model';
 import type NotestationNsxImportPlugin from './main';
+import { helloSettingItems } from './hello/settings';
 export interface ImportSettings { folder: string; profiles: Record<string, Record<string, string>> }
 export const DEFAULT_SETTINGS: ImportSettings = { folder: 'Note Station import', profiles: {} };
 export function normalizeSettings(saved: unknown): ImportSettings {
@@ -24,6 +25,11 @@ export function readSnapshot(value: unknown): Snapshot {
 export class ImportSettingTab extends PluginSettingTab {
  constructor(app: ConstructorParameters<typeof PluginSettingTab>[0], readonly owner: NotestationNsxImportPlugin) { super(app, owner); }
  getSettingDefinitions(): SettingDefinitionItem[] {
+  // The product rows, then the "More from NoteMods" card (packages/hello).
+  return [...this.productSettingDefinitions(), ...helloSettingItems()];
+ }
+
+ productSettingDefinitions(): SettingDefinitionItem[] {
   return [...(this.owner.pro ? sponsorsSettingItems(this.owner.pro, PRO_UI) : []), { name: 'Default output folder', desc: 'Use one new folder name. An existing folder stops the import.', control: { type: 'text', key: 'folder', defaultValue: DEFAULT_SETTINGS.folder } }];
  }
 }

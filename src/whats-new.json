@@ -1,0 +1,33 @@
+{
+	"id": "notestation-nsx-import",
+	"name": "Note Station NSX Import",
+	"version": "1.1.0",
+	"changes": [
+		"New Send feedback command. It opens a page where you can report a problem or suggest an idea.",
+		"Imports one local NSX archive into a new folder.",
+		"Keeps notebooks, source IDs, dates, source tags and local assets."
+	],
+	"changes_user": [
+		"New Send feedback command. It opens a page where you can report a problem or suggest an idea.",
+		"The ZIP reader got a security update, and ZIP64 backups are now refused before anything is unpacked."
+	],
+	"tip": "Keep Source snapshot.json from an import. With Pro, you can compare a later backup against it in a new review folder.",
+	"thanks": "Hi, I am Michael, a solo developer in Poland. Note Station NSX Import is one of over 100 small plugins that I make. Thank you for moving your notes into Obsidian with it.",
+	"related": [
+		{
+			"id": "standard-notes-import",
+			"name": "Standard Notes Import",
+			"blurb": "Import decrypted Standard Notes backups with tags and dates."
+		},
+		{
+			"id": "zoho-znote-import",
+			"name": "Zoho Znote Import",
+			"blurb": "Import Zoho ZNote exports with dates, tags, checklists and local attachments."
+		},
+		{
+			"id": "cherrytree-import",
+			"name": "CherryTree Import",
+			"blurb": "Import unencrypted CherryTree XML, links and PNGs."
+		}
+	]
+}
