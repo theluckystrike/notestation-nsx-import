@@ -1,5 +1,6 @@
 {
 	"name": "notestation-nsx-import",
+	"repository": {"type": "git", "url": "theluckystrike/notestation-nsx-import.git"},
 	"version": "1.1.0",
 	"private": true,
 	"description": "Import Note Station backups as notes with notebooks, dates, tags, and local attachments.",
