@@ -1,5 +1,11 @@
 # Change log
 
+## 1.1.1
+
+### Patch Changes
+
+- 7c9609d: Save profile and an earlier snapshot now show how to get Pro, with a Sponsor on GitHub button, when a free user selects them. Nothing is saved or compared.
+
 ## 1.1.0
 
 ### Minor Changes

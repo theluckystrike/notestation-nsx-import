@@ -4,7 +4,7 @@ import { MAX_ZIP } from './archive';
 import { readArchive, type Archive, type Snapshot } from './model';
 import { buildPlan, writePlan } from './importer';
 import { readSnapshot } from './settings';
-import { isPro } from './pro';
+import { isPro, proNotice } from './pro';
 import type NotestationNsxImportPlugin from './main';
 
 export class ImportModal extends Modal {
@@ -32,12 +32,12 @@ export class ImportModal extends Modal {
    const preview = this.summary.createEl('ul'); for (const n of a.notes.slice(0, 6)) preview.createEl('li', { text: `${n.title} — ${a.notebooks.find(b => b.id === n.parent)?.title ?? 'Unfiled'}` });
    for (const b of a.notebooks) new Setting(el).setName(b.title).setDesc('Notebook folder').addText(t => t.setValue(this.mapping[b.id] ?? b.title).onChange(v => { this.mapping[b.id] = v; }));
    const profiles = Object.keys(this.owner.settings.profiles);
-   new Setting(el).setName(`Notebook mapping profiles (${LABELS.pro})`).setDesc('Save or load notebook folders by source notebook ID.').addDropdown(d => { d.addOption('', 'Select a profile'); profiles.forEach(p => { d.addOption(p,p); }); d.onChange(p => { if (!isPro()) { new Notice(`Notebook mapping profiles need ${LABELS.pro}.`); return; } if(p) { this.mapping = { ...this.owner.settings.profiles[p] }; this.draw(); } }); });
+   new Setting(el).setName(`Notebook mapping profiles (${LABELS.pro})`).setDesc('Save or load notebook folders by source notebook ID.').addDropdown(d => { d.addOption('', 'Select a profile'); profiles.forEach(p => { d.addOption(p,p); }); d.onChange(p => { if (!isPro()) { proNotice(`Notebook mapping profiles need ${LABELS.pro}.`); return; } if(p) { this.mapping = { ...this.owner.settings.profiles[p] }; this.draw(); } }); });
    let profile = '';
    new Setting(el).setName(`Save mapping profile (${LABELS.pro})`).addText(t => t.setPlaceholder('Profile name').onChange(v => { profile = v; })).addButton(b => b.setButtonText('Save profile').onClick(() => { void this.saveProfile(profile); }));
    new Setting(el).setName(`Compare later backup (${LABELS.pro})`).setDesc('Select Source snapshot.json from an earlier import. Use a new review folder.');
    const prior = el.createEl('input', { type:'file', cls:'nsx-snapshot' }); prior.accept = '.json'; prior.setAttribute('aria-label','Earlier source snapshot');
-   prior.addEventListener('change', () => { void this.selectSnapshot(prior.files?.[0]); });
+   prior.addEventListener('change', () => { void this.selectSnapshot(prior.files?.[0], prior); });
    if (this.before) el.createEl('p', { text:'Source ID comparison is ready. Only added or changed notes go to the review folder.' });
    new Setting(el).addButton(b => b.setButtonText('Create new files').setCta().setDisabled(this.busy).onClick(() => { void this.run(); }));
   } else this.summary.createEl('p', { text:'No archive selected.' });
@@ -49,19 +49,23 @@ export class ImportModal extends Modal {
   catch(e) { this.archive = null; this.draw(); this.error(e); }
  }
  async saveProfile(name: string): Promise<void> {
+  // Free users can select the button: it shows what Pro adds and how to get it. No profile is saved.
+  if (!isPro()) { proNotice(`Notebook mapping profiles need ${LABELS.pro}.`); return; }
   try { await this.owner.saveProfile(name, this.archive!, this.mapping); this.draw(); new Notice('Notebook mapping profile saved.'); }
   catch(e) { this.error(e); }
  }
- async selectSnapshot(file?: File): Promise<void> {
+ async selectSnapshot(file?: File, input?: HTMLInputElement): Promise<void> {
   if (!file || this.busy) return;
-  try { if (!isPro()) throw new Error('Backup comparison needs Pro.'); if(file.size > MAX_ZIP) throw new Error('Snapshot exceeds 20 MiB.'); this.before = readSnapshot(JSON.parse(await file.text()) as unknown); this.folder = 'Note Station review'; this.draw(); }
+  // Free users can select a snapshot: it shows what Pro adds and how to get it. The snapshot is not read.
+  if (!isPro()) { proNotice(`Backup comparison needs ${LABELS.pro}.`); if (input) input.value = ''; return; }
+  try { if(file.size > MAX_ZIP) throw new Error('Snapshot exceeds 20 MiB.'); this.before = readSnapshot(JSON.parse(await file.text()) as unknown); this.folder = 'Note Station review'; this.draw(); }
   catch(e) { this.error(e); }
  }
  async run(): Promise<void> {
   if (!this.archive || this.busy) return;
+  if (this.before && !isPro()) { proNotice(`Backup comparison needs ${LABELS.pro}.`); return; }
   this.busy = true; this.draw();
   try {
-   if(this.before && !isPro()) throw new Error('Backup comparison needs Pro.');
    const plan = buildPlan(this.archive, this.folder, this.mapping, this.before);
    await writePlan(this.app.vault, plan);
    this.contentEl.empty(); this.contentEl.createEl('h2', { text:'Import complete' });

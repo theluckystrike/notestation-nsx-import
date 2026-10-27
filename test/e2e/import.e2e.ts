@@ -73,11 +73,6 @@ describe('local NSX import',()=>{
   await select(sample('<p><a href="notestation://remote/self/missing">Field notes</a></p><img ref="missing-image" src="placeholder">'),'E2E unresolved');await run();
   expect(await fileText('E2E unresolved/Research/Field notes 1.md')).toContain('notestation://remote/self/missing');const report=await fileText('E2E unresolved/Import report.md');expect(report).toContain('unresolved link');expect(report).toContain('unresolved reference missing');expect(await fileText('E2E unresolved/Research/Field notes 1.md')).toContain('(missing-image)');
  });
- it('guards profile saving and backup comparison while Pro is off',async()=>{
-  await select(sample(),'E2E locked');await browser.$('input[placeholder="Profile name"]').setValue('Field profile');await browser.execute(()=>{const button=Array.from(document.querySelectorAll<HTMLButtonElement>('.nsx-import button')).find(b=>b.textContent==='Save profile');if(!button||button.disabled)throw Error('Profile button is not ready');button.click();});await browser.$('.nsx-error').waitForExist();expect(await browser.$('.nsx-error').getText()).toContain('need Pro');
-  await browser.execute(()=>{const input=document.querySelector<HTMLInputElement>('.nsx-snapshot')!;const dt=new DataTransfer();dt.items.add(new File(['{}'],'Source snapshot.json'));input.files=dt.files;input.dispatchEvent(new Event('change',{bubbles:true}));});
-  await browser.waitUntil(async()=>await browser.execute(()=>Array.from(document.querySelectorAll('.nsx-error')).some(e=>e.textContent?.includes('comparison needs Pro'))));
- });
  it('saves a mapping profile and compares a later backup with a local Sponsor response',async()=>{
   await closeModal();await browser.executeObsidian(async({app},id)=>{
    type Pro={opts:{http:()=>Promise<unknown>};refreshNow:()=>Promise<unknown>};

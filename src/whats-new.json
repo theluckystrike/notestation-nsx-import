@@ -1,15 +1,10 @@
 {
 	"id": "notestation-nsx-import",
 	"name": "Note Station NSX Import",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"changes": [
-		"New Send feedback command. It opens a page where you can report a problem or suggest an idea.",
-		"Imports one local NSX archive into a new folder.",
-		"Keeps notebooks, source IDs, dates, source tags and local assets."
-	],
-	"changes_user": [
-		"New Send feedback command. It opens a page where you can report a problem or suggest an idea.",
-		"The ZIP reader got a security update, and ZIP64 backups are now refused before anything is unpacked."
+		"Save profile and Compare later backup now show how to get Pro, with a Sponsor on GitHub button, when you select them.",
+		"Without Pro, these controls save no profile and read no snapshot."
 	],
 	"tip": "Keep Source snapshot.json from an import. With Pro, you can compare a later backup against it in a new review folder.",
 	"thanks": "Hi, I am Michael, a solo developer in Poland. Note Station NSX Import is one of over 100 small plugins that I make. Thank you for moving your notes into Obsidian with it.",
