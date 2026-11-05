@@ -60,7 +60,7 @@ The comparison checks exported source note records. It does not compare your edi
 
 ## Install
 
-For manual installation, copy `main.js`, `manifest.json`, and `styles.css` from the release into `<vault>/.obsidian/plugins/notestation-nsx-import/`. Enable community plugins and then enable Note Station NSX Import. Use Obsidian 1.13.4 or later.
+For manual installation, copy `main.js`, `manifest.json`, and `styles.css` from the release into `<vault>/.obsidian/plugins/notestation-nsx-import/`. Enable community plugins, then Note Station NSX Import. Use Obsidian 1.13.4 or later.
 
 ## Usage
 
@@ -90,6 +90,8 @@ Can the importer repair a missing attachment? No. Check the original Note Statio
 
 The core features are free. Pro features need a GitHub Sponsors sponsorship of theluckystrike: $5 a month or more, or $15 once. A total payment of $15 meets the payment requirement for Pro without further payment. Sign-in and the checks below still apply. Your notes stay readable and editable with or without Pro.
 
+[One payment turns on Pro in every NoteMods plugin](https://notemods.com/pro/).
+
 GitHub handles the payment. Sponsor at https://github.com/sponsors/theluckystrike?frequency=one-time&metadata_source=notestation-nsx-import. You need no account for the free features. Pro needs the GitHub account that sponsors.
 
 Until you select "Sign in with GitHub" in the settings, Note Station NSX Import makes no network requests. Sign in uses the GitHub device flow. Note Station NSX Import sends its public client ID and the scope `read:user` to `https://github.com/login/device/code` and shows you a code. While you enter the code at https://github.com/login/device, it asks `https://github.com/login/oauth/access_token` every few seconds to check the sign-in status. The scope permits profile reads only. GitHub needs this access to show the sponsorship tier. It grants no repository scope and no write access.
@@ -100,4 +102,4 @@ After a successful check, Pro can work offline for up to 14 days. Sign out or a 
 
 ## Support
 
-Use the issue tracker at [theluckystrike/notestation-nsx-import](https://github.com/theluckystrike/notestation-nsx-import/issues) or see [notemods.com](https://notemods.com). Include the plugin version, Obsidian version, and the report entry. Remove private note text and paths before sharing an example. The plugin source is under the MIT license.
+Use the issue tracker at [theluckystrike/notestation-nsx-import](https://github.com/theluckystrike/notestation-nsx-import/issues). Include the plugin version, Obsidian version, and the report entry. Remove private note text and paths before sharing an example. The plugin source is under the MIT license.
