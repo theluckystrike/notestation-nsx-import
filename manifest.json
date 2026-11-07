@@ -1,9 +1,9 @@
 {
 	"id": "notestation-nsx-import",
 	"name": "Note Station NSX Import",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"minAppVersion": "1.13.4",
-	"description": "Import Note Station backups as notes with notebooks, dates, tags, and local attachments.",
+	"description": "Import a Synology Note Station backup as notes. Select an NSX file and migrate notebooks, dates, tags and local attachments into a new folder.",
 	"author": "Michael Lip",
 	"authorUrl": "https://github.com/theluckystrike",
 	"fundingUrl": "https://github.com/sponsors/theluckystrike",

@@ -58,13 +58,13 @@ describe('Pro notice for a free user', () => {
 		await clickSave();
 		await browser.waitUntil(async () => (await notices()).some((n) => n.text.includes('Notebook mapping profiles need Pro.')), { timeout: 5000, timeoutMsg: 'No Pro notice after Save profile.' });
 		const save = (await notices()).find((n) => n.text.includes('Notebook mapping profiles need Pro.'))!;
-		expect(save.text).toContain('Notebook mapping profiles need Pro. Sponsor on GitHub, then sign in from the plugin settings.');
+		expect(save.text).toContain('Notebook mapping profiles need Pro. One payment turns on Pro in every NoteMods plugin. Sponsor on GitHub, then sign in from the plugin settings.');
 		expect(save.buttons).toBe(1);
 
 		await selectSnapshot();
 		await browser.waitUntil(async () => (await notices()).some((n) => n.text.includes('Backup comparison needs Pro.')), { timeout: 5000, timeoutMsg: 'No Pro notice after the snapshot select.' });
 		const compare = (await notices()).find((n) => n.text.includes('Backup comparison needs Pro.'))!;
-		expect(compare.text).toContain('Backup comparison needs Pro. Sponsor on GitHub, then sign in from the plugin settings.');
+		expect(compare.text).toContain('Backup comparison needs Pro. One payment turns on Pro in every NoteMods plugin. Sponsor on GitHub, then sign in from the plugin settings.');
 		expect(compare.buttons).toBe(1);
 
 		const state = await browser.executeObsidian(({ app }, id) => {
